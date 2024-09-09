@@ -36,7 +36,7 @@ certbot renew
 ## II. Apply SSL Certificates on HTTPS Port of Apache HTTPD in Docker
 
 ### 1. Create `Dockerfile`
-#### >>> Create a Dockerfile on path `/opt/https-httpd` with the following content:
+#### >>> Create a `Dockerfile` on path `/opt/https-httpd` with the following content:
 ```
 FROM httpd:latest
 
@@ -62,7 +62,7 @@ cp -R /etc/letsencrypt/archive/crossroadscambodia.church/privkey1.pem /opt/https
 ```
 
 ### 3. Create `default-ssl.conf`
-#### >>> Create a default-ssl.conf file on path `/opt/https-httpd` with your SSL configuration. Replace `crossroadscambodia.church` with your actual domain name:
+#### >>> Create a `default-ssl.conf` file on path `/opt/https-httpd` with your SSL configuration. Replace `crossroadscambodia.church` with your actual domain name:
 ```
 <IfModule ssl_module>
     Listen 443 https
