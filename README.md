@@ -85,4 +85,3 @@ docker build -t https-httpd .
 cd /opt/https-httpd
 docker run -d -p 443:443 -v /opt/cr-website:/usr/local/apache2/htdocs --restart always --name cr-website-httpd https-httpd
 ```
-#### >>> If docker-compose.yml or .env was modified, we need to stop and start container (Restart won't be affect the changes).
