@@ -82,6 +82,5 @@ docker build -t https-httpd .
 ### 5. Run Docker Container
 #### >>> Run the Docker container and map the HTTPS port (443) to a port on the host machine:
 ```
-cd /opt/https-httpd
 docker run -d -p 443:443 -v /opt/cr-website:/usr/local/apache2/htdocs --restart always --name cr-website-httpd https-httpd
 ```
