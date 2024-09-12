@@ -33,6 +33,12 @@ ls /etc/letsencrypt/live/crossroadscambodia.church/
 certbot renew
 ```
 
+### 5. Check All Certificates
+#### >>> You can obtain all certificates details in certbot by running the following commands:
+```
+certbot certificates
+```
+
 ## II. Apply SSL Certificates on HTTPS Port of Apache HTTPD in Docker
 
 ### 1. Create `Dockerfile`
@@ -61,7 +67,7 @@ cp -R /etc/letsencrypt/archive/crossroadscambodia.church/fullchain1.pem /opt/htt
 cp -R /etc/letsencrypt/archive/crossroadscambodia.church/privkey1.pem /opt/https-httpd/privkey.pem
 ```
 
-### 3. Create `default-ssl.conf`
+### 3. Create `default-ssl.conf` To Enable HTTPS Access
 #### >>> Create a `default-ssl.conf` file on path `/opt/https-httpd` with your SSL configuration. Replace `crossroadscambodia.church` with your actual domain name:
 ```
 <IfModule ssl_module>
@@ -90,7 +96,7 @@ cp -R /etc/letsencrypt/archive/crossroadscambodia.church/privkey1.pem /opt/https
 </IfModule>
 ```
 
-### 5. Create `httpd.conf` To Custom Configuration of HTTPD
+### 5. Create `httpd.conf` For Custom Configuration of HTTPD
 #### >>> Create a `httpd.conf` on path `/opt/https-httpd` with the following content:
 ```
 #
