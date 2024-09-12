@@ -634,7 +634,7 @@ Include /usr/local/apache2/conf/extra/httpd-ssl.conf
 ```
 
 ### 5. Create `.htaccess` To Enable URL Rewriting
-#### >>> Create a `.htaccess` on path `/opt/cr-website/` with the following content:
+#### >>> Create a `.htaccess` on path `/opt/crweb-frontend/` with the following content:
 ```
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -657,7 +657,11 @@ docker build -t https-httpd .
 ```
 
 ### 7. Run Docker Container
-#### >>> Run the Docker container and map the HTTPS port (443) to a port on the host machine:
+#### >>> Run the Docker container and map the HTTPS port (443) to port (443) on the host machine for CR Web Frontend:
 ```
-docker run -d -p 443:443 -v /opt/cr-website:/usr/local/apache2/htdocs --restart always --name cr-website-httpd https-httpd
+docker run -d -p 443:443 -v /opt/crweb-frontend:/usr/local/apache2/htdocs --restart always --name crweb-frontend-httpd https-httpd
+```
+#### >>> Run the Docker container and map the HTTPS port (443) to port (7000) on the host machine for CR Drive:
+```
+docker run -d -p 7000:443 -v /opt/cr-drive:/usr/local/apache2/htdocs --restart always --name cr-drive-httpd https-httpd
 ```
