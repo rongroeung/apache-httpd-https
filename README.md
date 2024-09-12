@@ -53,9 +53,6 @@ COPY privkey.pem /usr/local/apache2/conf/privkey.pem
 # Copy default-ssl.conf to enable HTTPS
 COPY default-ssl.conf /usr/local/apache2/conf/extra/httpd-ssl.conf
 
-# Copy the .htaccess file to enable URL rewriting
-COPY .htaccess /usr/local/apache2/htdocs/
-
 # Copy custom httpd.conf
 COPY httpd.conf /usr/local/apache2/conf/httpd.conf
 ```
@@ -79,24 +76,7 @@ cp -R /etc/letsencrypt/archive/crossroadscambodia.church/privkey1.pem /opt/https
 </IfModule>
 ```
 
-### 4. Create `.htaccess` To Enable URL Rewriting
-#### >>> Create a `.htaccess` on path `/opt/https-httpd` with the following content:
-```
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-
-  # Redirect Trailing Slashes...
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.*)/$ /$1 [L,R=301]
-
-  # Handle Front Controller...
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^ index.html [L]
-</IfModule>
-```
-
-### 5. Create `httpd.conf` For Custom Configuration of HTTPD
+### 4. Create `httpd.conf` For Custom Configuration of HTTPD
 #### >>> Create a `httpd.conf` on path `/opt/https-httpd` with the following content:
 ```
 #
@@ -651,6 +631,23 @@ LogLevel warn
 </IfModule>
 
 Include /usr/local/apache2/conf/extra/httpd-ssl.conf
+```
+
+### 5. Create `.htaccess` To Enable URL Rewriting
+#### >>> Create a `.htaccess` on path `/opt/cr-website/` with the following content:
+```
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Redirect Trailing Slashes...
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+  # Handle Front Controller...
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ index.html [L]
+</IfModule>
 ```
 
 ### 6. Build Docker Image
