@@ -5,21 +5,21 @@
 ### 1. Install Certbot
 #### >>> If you haven't already installed Certbot, you can do so by running the following commands:
 ```
-sudo apt-get update
-sudo apt-get install certbot
+apt-get update
+apt-get install certbot
 ```
 
 ### 2. Obtain SSL/TLS Certificates
 #### >>> Run Certbot to obtain SSL/TLS certificates for your domain. Replace `crossroadscambodia.church` with your actual domain name:
 ```
-sudo certbot certonly --standalone -d crossroadscambodia.church
+certbot certonly --standalone -d crossroadscambodia.church
 ```
 #### >>> Certbot will guide you through the process, and if successful, it will store the certificates in /etc/letsencrypt/live/crossroadscambodia.church/
 
 ### 3. Verify Certificate Generation
 #### >>> You can verify the generated certificates by checking the directory where Certbot stores them:
 ```
-sudo ls /etc/letsencrypt/live/crossroadscambodia.church/
+ls /etc/letsencrypt/live/crossroadscambodia.church/
 ```
 #### >>> You should see the following files:
 #### - `cert.pem`: Your domain's certificate.
@@ -30,13 +30,13 @@ sudo ls /etc/letsencrypt/live/crossroadscambodia.church/
 ### 4. Renew Certificates
 #### >>> Certbot certificates usually last for 90 days. You can set up a cron job to automatically renew them. To renew manually, run:
 ```
-sudo certbot renew
+certbot renew
 ```
 
 ### 5. Check All Certificates
 #### >>> You can obtain all certificates details in certbot by running the following commands:
 ```
-sudo certbot certificates
+certbot certificates
 ```
 
 ## II. Apply SSL Certificates on HTTPS Port of Apache HTTPD in Docker
@@ -60,8 +60,8 @@ COPY httpd.conf /usr/local/apache2/conf/httpd.conf
 ### 2. Import SSL Certificates Into Working Directory
 #### >>> Import `fullchain.pem` and `privkey.pem` that we've generated using certbot
 ```
-sudo cp -R /etc/letsencrypt/archive/crossroadscambodia.church/fullchain1.pem /opt/https-httpd/fullchain.pem
-sudo cp -R /etc/letsencrypt/archive/crossroadscambodia.church/privkey1.pem /opt/https-httpd/privkey.pem
+cp -R /etc/letsencrypt/archive/crossroadscambodia.church/fullchain1.pem /opt/https-httpd/fullchain.pem
+cp -R /etc/letsencrypt/archive/crossroadscambodia.church/privkey1.pem /opt/https-httpd/privkey.pem
 ```
 
 ### 3. Create `default-ssl.conf` To Enable HTTPS Access
@@ -653,15 +653,15 @@ Include /usr/local/apache2/conf/extra/httpd-ssl.conf
 ### 6. Build Docker Image
 #### >>> Build the Docker image using the Dockerfile:
 ```
-sudo docker build -t https-httpd .
+docker build -t https-httpd .
 ```
 
 ### 7. Run Docker Container
 #### >>> Run the Docker container and map the HTTPS port (443) to port (443) on the host machine for CR Web Frontend:
 ```
-sudo docker run -d -p 443:443 -v /opt/cr-web-frontend:/usr/local/apache2/htdocs --restart always --name cr-web-frontend-httpd https-httpd
+docker run -d -p 443:443 -v /opt/cr-web-frontend:/usr/local/apache2/htdocs --restart always --name cr-web-frontend-httpd https-httpd
 ```
 #### >>> Run the Docker container and map the HTTPS port (443) to port (7000) on the host machine for CR Drive:
 ```
-sudo docker run -d -p 7000:443 -v /opt/cr-drive:/usr/local/apache2/htdocs --restart always --name cr-drive-httpd https-httpd
+docker run -d -p 7000:443 -v /opt/cr-drive:/usr/local/apache2/htdocs --restart always --name cr-drive-httpd https-httpd
 ```
