@@ -19,7 +19,7 @@ sudo certbot certonly --standalone -d crossroadscambodia.church
 ### 3. Verify Certificate Generation
 #### >>> You can verify the generated certificates by checking the directory where Certbot stores them:
 ```
-ls /etc/letsencrypt/live/crossroadscambodia.church/
+sudo ls /etc/letsencrypt/live/crossroadscambodia.church/
 ```
 #### >>> You should see the following files:
 #### - `cert.pem`: Your domain's certificate.
