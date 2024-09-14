@@ -5,14 +5,14 @@
 ### 1. Install Certbot
 #### >>> If you haven't already installed Certbot, you can do so by running the following commands:
 ```
-apt-get update
-apt-get install certbot
+sudo apt-get update
+sudo apt-get install certbot
 ```
 
 ### 2. Obtain SSL/TLS Certificates
 #### >>> Run Certbot to obtain SSL/TLS certificates for your domain. Replace `crossroadscambodia.church` with your actual domain name:
 ```
-certbot certonly --standalone -d crossroadscambodia.church
+sudo certbot certonly --standalone -d crossroadscambodia.church
 ```
 #### >>> Certbot will guide you through the process, and if successful, it will store the certificates in /etc/letsencrypt/live/crossroadscambodia.church/
 
@@ -30,13 +30,13 @@ ls /etc/letsencrypt/live/crossroadscambodia.church/
 ### 4. Renew Certificates
 #### >>> Certbot certificates usually last for 90 days. You can set up a cron job to automatically renew them. To renew manually, run:
 ```
-certbot renew
+sudo certbot renew
 ```
 
 ### 5. Check All Certificates
 #### >>> You can obtain all certificates details in certbot by running the following commands:
 ```
-certbot certificates
+sudo certbot certificates
 ```
 
 ## II. Apply SSL Certificates on HTTPS Port of Apache HTTPD in Docker
@@ -653,15 +653,15 @@ Include /usr/local/apache2/conf/extra/httpd-ssl.conf
 ### 6. Build Docker Image
 #### >>> Build the Docker image using the Dockerfile:
 ```
-docker build -t https-httpd .
+sudo docker build -t https-httpd .
 ```
 
 ### 7. Run Docker Container
 #### >>> Run the Docker container and map the HTTPS port (443) to port (443) on the host machine for CR Web Frontend:
 ```
-docker run -d -p 443:443 -v /opt/cr-web-frontend:/usr/local/apache2/htdocs --restart always --name cr-web-frontend-httpd https-httpd
+sudo docker run -d -p 443:443 -v /opt/cr-web-frontend:/usr/local/apache2/htdocs --restart always --name cr-web-frontend-httpd https-httpd
 ```
 #### >>> Run the Docker container and map the HTTPS port (443) to port (7000) on the host machine for CR Drive:
 ```
-docker run -d -p 7000:443 -v /opt/cr-drive:/usr/local/apache2/htdocs --restart always --name cr-drive-httpd https-httpd
+sudo docker run -d -p 7000:443 -v /opt/cr-drive:/usr/local/apache2/htdocs --restart always --name cr-drive-httpd https-httpd
 ```
