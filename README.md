@@ -60,8 +60,8 @@ COPY httpd.conf /usr/local/apache2/conf/httpd.conf
 ### 2. Import SSL Certificates Into Working Directory
 #### >>> Import `fullchain.pem` and `privkey.pem` that we've generated using certbot
 ```
-cp -R /etc/letsencrypt/archive/crossroadscambodia.church/fullchain1.pem /opt/https-httpd/fullchain.pem
-cp -R /etc/letsencrypt/archive/crossroadscambodia.church/privkey1.pem /opt/https-httpd/privkey.pem
+sudo cp -R /etc/letsencrypt/archive/crossroadscambodia.church/fullchain1.pem /opt/https-httpd/fullchain.pem
+sudo cp -R /etc/letsencrypt/archive/crossroadscambodia.church/privkey1.pem /opt/https-httpd/privkey.pem
 ```
 
 ### 3. Create `default-ssl.conf` To Enable HTTPS Access
