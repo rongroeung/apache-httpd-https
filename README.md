@@ -12,8 +12,30 @@ apt-get install certbot
 ### 2. Obtain SSL/TLS Certificates
 #### >>> Run Certbot to obtain SSL/TLS certificates for your domain. Replace `crossroadscambodia.church` with your actual domain name:
 ```
-certbot certonly --standalone -d crossroadscambodia.church
+certbot certonly --manual --preferred-challenges dns -d '*.crossroadscambodia.church' -d 'crossroadscambodia.church'
 ```
+#### >>> Deploy a DNS TXT record accordingly as certbot guided. Here's sample guideline from certbot:
+```
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please deploy a DNS TXT record under the name:
+
+_acme-challenge.crossroadscambodia.church.
+
+with the following value:
+
+kDeQ5udLojezoMI0SNIyMKY_XcsiuarxWoNVgVhCJ1Q
+
+Before continuing, verify the TXT record has been deployed. Depending on the DNS
+provider, this may take some time, from a few seconds to multiple minutes. You can
+check if it has finished deploying with aid of online tools, such as the Google
+Admin Toolbox: https://toolbox.googleapps.com/apps/dig/#TXT/_acme-challenge.crossroadscambodia.church.
+Look for one or more bolded line(s) below the line ';ANSWER'. It should show the
+value(s) you've just added.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Press Enter to Continue
+```
+
 #### >>> Certbot will guide you through the process, and if successful, it will store the certificates in /etc/letsencrypt/live/crossroadscambodia.church/
 
 ### 3. Verify Certificate Generation
