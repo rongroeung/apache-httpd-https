@@ -685,5 +685,5 @@ docker run -d -p 443:443 -v /opt/cr-web-frontend:/usr/local/apache2/htdocs --res
 ```
 #### >>> Run the Docker container and map the HTTPS port (443) to port (7005) on the host machine for CR Building Report:
 ```
-docker run -d -p 7005:443 -v /opt/cr-building-report:/usr/local/apache2/htdocs --restart always --name cr-building-report https-httpd
+docker run -d -p 7005:443 -v /opt/cr-building-report:/usr/local/apache2/htdocs --restart always --name cr-building-report-httpd https-httpd
 ```
