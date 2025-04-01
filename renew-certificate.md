@@ -83,3 +83,9 @@ docker run -d -p 7005:443 -v /opt/cr-building-report:/usr/local/apache2/htdocs -
 ```
 systemctl restart nginx
 ```
+
+## 12. Try to Access HTTPS URLs After Renewal
+
+https://crossroadscambodia.church/
+https://crossroadscambodia.church:7005/
+https://crossroadscambodia.church:7002/cr-web-backend/api/v1/getAllContentId
