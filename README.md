@@ -50,10 +50,8 @@ ls /etc/letsencrypt/live/crossroadscambodia.org/
 #### - `privkey.pem`: The private key for your certificate.
 
 ### 4. Renew Certificates
-#### >>> Certbot certificates usually last for 90 days. You can set up a cron job to automatically renew them. To renew manually, run:
-```
-certbot renew
-```
+#### >>> Certbot certificates usually last for 90 days.
+#### >>> The certificate will not be renewed automatically. Autorenewal of --manual certificates requires the use of an authentication hook script (--manual-auth-hook) but one was not provided. To renew this certificate, repeat this same certbot command (the 2nd step) before the certificate's expiry date.
 
 ### 5. Check All Certificates
 #### >>> You can obtain all certificates details in certbot by running the following commands:
