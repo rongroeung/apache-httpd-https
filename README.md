@@ -10,16 +10,16 @@ apt-get install certbot
 ```
 
 ### 2. Obtain SSL/TLS Certificates
-#### >>> Run Certbot to obtain SSL/TLS certificates for your domain. Replace `crossroadscambodia.church` with your actual domain name:
+#### >>> Run Certbot to obtain SSL/TLS certificates for your domain. Replace `crossroadscambodia.org` with your actual domain name:
 ```
-certbot certonly --manual --preferred-challenges dns -d '*.crossroadscambodia.church' -d 'crossroadscambodia.church'
+certbot certonly --manual --preferred-challenges dns -d '*.crossroadscambodia.org' -d 'crossroadscambodia.org'
 ```
 #### >>> Deploy a DNS TXT record accordingly as certbot guided. Here's sample guideline from certbot:
 ```
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 Please deploy a DNS TXT record under the name:
 
-_acme-challenge.crossroadscambodia.church.
+_acme-challenge.crossroadscambodia.org.
 
 with the following value:
 
@@ -28,7 +28,7 @@ kDeQ5udLojezoMI0SNIyMKY_XcsiuarxWoNVgVhCJ1Q
 Before continuing, verify the TXT record has been deployed. Depending on the DNS
 provider, this may take some time, from a few seconds to multiple minutes. You can
 check if it has finished deploying with aid of online tools, such as the Google
-Admin Toolbox: https://toolbox.googleapps.com/apps/dig/#TXT/_acme-challenge.crossroadscambodia.church.
+Admin Toolbox: https://toolbox.googleapps.com/apps/dig/#TXT/_acme-challenge.crossroadscambodia.org.
 Look for one or more bolded line(s) below the line ';ANSWER'. It should show the
 value(s) you've just added.
 
@@ -36,12 +36,12 @@ value(s) you've just added.
 Press Enter to Continue
 ```
 
-#### >>> Certbot will guide you through the process, and if successful, it will store the certificates in /etc/letsencrypt/live/crossroadscambodia.church/
+#### >>> Certbot will guide you through the process, and if successful, it will store the certificates in /etc/letsencrypt/live/crossroadscambodia.org/
 
 ### 3. Verify Certificate Generation
 #### >>> You can verify the generated certificates by checking the directory where Certbot stores them:
 ```
-ls /etc/letsencrypt/live/crossroadscambodia.church/
+ls /etc/letsencrypt/live/crossroadscambodia.org/
 ```
 #### >>> You should see the following files:
 #### - `cert.pem`: Your domain's certificate.
@@ -82,16 +82,16 @@ COPY httpd.conf /usr/local/apache2/conf/httpd.conf
 ### 2. Import SSL Certificates Into Working Directory
 #### >>> Import `fullchain.pem` and `privkey.pem` that we've generated using certbot
 ```
-cp -R /etc/letsencrypt/archive/crossroadscambodia.church/fullchain1.pem /opt/https-httpd/fullchain.pem
-cp -R /etc/letsencrypt/archive/crossroadscambodia.church/privkey1.pem /opt/https-httpd/privkey.pem
+cp -R /etc/letsencrypt/archive/crossroadscambodia.org/fullchain1.pem /opt/https-httpd/fullchain.pem
+cp -R /etc/letsencrypt/archive/crossroadscambodia.org/privkey1.pem /opt/https-httpd/privkey.pem
 ```
 
 ### 3. Create `default-ssl.conf` To Enable HTTPS Access
-#### >>> Create a `default-ssl.conf` file on path `/opt/https-httpd` with your SSL configuration. Replace `crossroadscambodia.church` with your actual domain name:
+#### >>> Create a `default-ssl.conf` file on path `/opt/https-httpd` with your SSL configuration. Replace `crossroadscambodia.org` with your actual domain name:
 ```
 <IfModule ssl_module>
     Listen 443 https
-    ServerName crossroadscambodia.church
+    ServerName crossroadscambodia.org
     SSLEngine on
     SSLCertificateFile /usr/local/apache2/conf/fullchain.pem
     SSLCertificateKeyFile /usr/local/apache2/conf/privkey.pem
@@ -332,7 +332,7 @@ Group www-data
 # e-mailed.  This address appears on some server-generated pages, such
 # as error documents.  e.g. admin@your-domain.com
 #
-ServerAdmin rongroeung@crossroadscambodia.church
+ServerAdmin rongroeung@crossroadscambodia.org
 
 #
 # ServerName gives the name and port that the server uses to identify itself.
