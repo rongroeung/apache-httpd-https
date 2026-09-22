@@ -51,7 +51,93 @@ ls /etc/letsencrypt/live/crossroadscambodia.org/
 
 ### 4. Renew Certificates
 #### >>> Certbot certificates usually last for 90 days.
-#### >>> The certificate will not be renewed automatically. Autorenewal of --manual certificates requires the use of an authentication hook script (--manual-auth-hook) but one was not provided. To renew this certificate, repeat this same certbot command (the 2nd step) before the certificate's expiry date.
+#### >>> The certificate will not be renewed automatically. Autorenewal of --manual certificates requires the use of an authentication hook script (--manual-auth-hook) but one was not provided. To renew this certificate, do the following steps.
+
+##### 4.1. Delete current certificate
+```
+certbot delete
+cd /etc/letsencrypt/archive/crossroadscambodia.org
+rm -rf *
+```
+
+##### 4.2. Generate a new certificate
+```
+certbot certonly --manual --preferred-challenges dns -d '*.crossroadscambodia.org' -d 'crossroadscambodia.org'
+```
+
+##### 4.3. Deploy a DNS TXT record accordingly as certbot guided. Here's sample guideline from certbot:
+```
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Please deploy a DNS TXT record under the name:
+
+_acme-challenge.crossroadscambodia.org.
+
+with the following value:
+
+kDeQ5udLojezoMI0SNIyMKY_XcsiuarxWoNVgVhCJ1Q
+
+Before continuing, verify the TXT record has been deployed. Depending on the DNS
+provider, this may take some time, from a few seconds to multiple minutes. You can
+check if it has finished deploying with aid of online tools, such as the Google
+Admin Toolbox: https://toolbox.googleapps.com/apps/dig/#TXT/_acme-challenge.crossroadscambodia.org.
+Look for one or more bolded line(s) below the line ';ANSWER'. It should show the
+value(s) you've just added.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Press Enter to Continue
+```
+###### >>> Certbot will guide you through the process, and if successful, it will store the certificates in /etc/letsencrypt/live/crossroadscambodia.org/
+
+##### 4.4. Verify Certificate Generation
+###### >>> You can verify the generated certificates by checking the directory where Certbot stores them:
+```
+ls /etc/letsencrypt/live/crossroadscambodia.org/
+```
+###### >>> You should see the following files:
+###### - `cert.pem`: Your domain's certificate.
+###### - `chain.pem`: The Let's Encrypt chain certificate.
+###### - `fullchain.pem`: Concatenation of cert.pem and chain.pem.
+###### - `privkey.pem`: The private key for your certificate.
+
+##### 4.5. Delete old certificate files from httpd path
+```
+cd /opt/https-httpd
+rm -rf fullchain.pem privkey.pem
+```
+
+##### 4.6. Import new certificate files to httpd path
+```
+cp -R /etc/letsencrypt/archive/crossroadscambodia.org/fullchain1.pem /opt/https-httpd/fullchain.pem
+cp -R /etc/letsencrypt/archive/crossroadscambodia.org/privkey1.pem /opt/https-httpd/privkey.pem
+```
+
+##### 4.7. Stop containers related to httpd image
+```
+cd /opt/cr-web-microservices
+docker compose down 
+```
+
+##### 4.8. Remove current httpd image
+```
+docker rmi -f https-httpd:latest
+```
+
+##### 4.9. Build new httpd image
+```
+cd /opt/https-httpd
+docker build -t https-httpd .
+```
+
+##### 4.10. Start containers back
+```
+cd /opt/cr-web-microservices
+docker compose up -d
+```
+
+##### 4.11. Restart Nginx for CR Web Backend Service
+```
+systemctl restart nginx
+```
 
 ### 5. Check All Certificates
 #### >>> You can obtain all certificates details in certbot by running the following commands:
@@ -653,8 +739,16 @@ LogLevel warn
 Include /usr/local/apache2/conf/extra/httpd-ssl.conf
 ```
 
-### 5. Create `.htaccess` To Enable URL Rewriting
-#### >>> Create a `.htaccess` on path `/opt/cr-web-frontend/` with the following content:
+### 5. Build Docker Image
+#### >>> Build the Docker image using the Dockerfile:
+```
+cd /opt/https-httpd
+docker build -t https-httpd .
+```
+
+### 6. Prepare Resources for web-frontend
+#### 6.1. Create `.htaccess` To Enable URL Rewriting
+##### >>> Create a `.htaccess` on path `/opt/cr-web-microservices/web-frontend` with the following content:
 ```
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -670,18 +764,117 @@ Include /usr/local/apache2/conf/extra/httpd-ssl.conf
 </IfModule>
 ```
 
-### 6. Build Docker Image
-#### >>> Build the Docker image using the Dockerfile:
-```
-docker build -t https-httpd .
+#### 6.2. Input web-frontend resources on path `/opt/cr-web-microservices/web-frontend`
+##### >>> Resources such as `index.html`, `assets/` folder, `sitemap.xml`
+```sitemap.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://www.crossroadscambodia.org/</loc>
+  <lastmod>2025-09-17T15:00:24+00:00</lastmod>
+</url>
+
+
+</urlset>
 ```
 
-### 7. Run Docker Container
-#### >>> Run the Docker container and map the HTTPS port (443) to port (443) on the host machine for CR Web Frontend:
+### 7. Prepare Resources for web-backend
+#### >>> Build image cr-web-backend:1.0.0 https://github.com/rongroeung/cr-web-backend#2-build-docker-image
+#### >>> Create a `.env` on path `/opt/cr-web-microservices/web-backend` with the following content:
 ```
-docker run -d -p 443:443 -v /opt/cr-web-frontend:/usr/local/apache2/htdocs --restart always --name cr-web-frontend-httpd https-httpd
+#DB Config Environment
+DB_HOST=192.168.10.111
+DB_PORT=5432
+DB_NAME=crwebdb
+DB_USERNAME=crwebdb
+DB_PASSWORD=Passw0rd
 ```
-#### >>> Run the Docker container and map the HTTPS port (443) to port (7005) on the host machine for CR Building Report:
+
+### 8. Create `docker-compose.yml` on path `/opt/cr-web-microservices`
+#### >> Ensure that you have created mount data path `/opt/volume-mount/postgres-data`, `/mnt/file-manager/data` and `/mnt/file-manager/config`
 ```
-docker run -d -p 7005:443 -v /opt/cr-building-report:/usr/local/apache2/htdocs --restart always --name cr-building-report-httpd https-httpd
+version: '3.8'
+
+services:
+  web-frontend:
+    image: https-httpd
+    restart: always
+    ports:
+      - 443:443
+    volumes:
+      - /opt/cr-web-microservices/web-frontend:/usr/local/apache2/htdocs
+    networks:
+      - cr-web-network
+    deploy:
+      resources:
+        limits:
+          cpus: 1
+          memory: 512m
+
+  web-backend:
+    image: cr-web-backend:1.0.0
+    restart: always  # Configure restart policy
+    env_file:
+      - ./web-backend/.env
+    ports:
+      - 7001:8080  # Bind host port 7001 to container port 8080
+    networks:
+      - cr-web-network
+    deploy:
+      resources:
+        limits:
+          cpus: 4
+          memory: 2g
+
+  postgres-db:
+    image: postgres
+    restart: always
+    shm_size: 128m  # Set shared memory limit up to 128mb
+    ports:
+      - 5432:5432
+    volumes:
+      - /opt/volume-mount/postgres-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 'Pa$$word@123'
+    networks:
+      - cr-web-network
+    deploy:
+      resources:
+        limits:
+          cpus: 2
+          memory: 512m
+
+  file-manager:
+    image: hurlenko/filebrowser
+    restart: always
+    ports:
+      - 7003:8080
+    volumes:
+      - /mnt/file-manager/data:/data
+      - /mnt/file-manager/config:/config
+    environment:
+      - FB_BASEURL=/filebrowser
+    networks:
+      - cr-web-network
+    deploy:
+      resources:
+        limits:
+          cpus: 1
+          memory: 512m
+
+networks:
+  cr-web-network:
+```
+
+### 9. Run Containers Using Docker Compose
+```
+cd /opt/cr-web-microservices
+docker compose up -d
 ```
