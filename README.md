@@ -56,8 +56,6 @@ ls /etc/letsencrypt/live/crossroadscambodia.org/
 ##### 4.1. Delete current certificate
 ```
 certbot delete
-cd /etc/letsencrypt/archive/crossroadscambodia.org
-rm -rf *
 ```
 
 ##### 4.2. Generate a new certificate
@@ -786,7 +784,8 @@ docker build -t https-httpd .
 ```
 
 ### 7. Prepare Resources for web-backend
-#### >>> Build image cr-web-backend:1.0.0, you may check details here > https://github.com/rongroeung/cr-web-backend#2-build-docker-image
+#### >>> Build image cr-web-backend:1.0.0, you may check details via link below.
+https://github.com/rongroeung/cr-web-backend#2-build-docker-image
 #### >>> Create a `.env` on path `/opt/cr-web-microservices/web-backend` with the following content:
 ```
 #DB Config Environment
